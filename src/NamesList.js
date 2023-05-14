@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import CheckboxControlledComponent from './CheckboxControlledComponent';
 
-let id = 0;
+let guestId = 0;
 
 export default function NamesList() {
   const [firstName, setFirstName] = useState('');
@@ -18,13 +18,13 @@ export default function NamesList() {
   function handleSubmit(event) {
     const newGuests = [
       {
-        id: id,
+        id: guestId,
         firstName: firstName,
         lastName: lastName,
       },
       ...guests,
     ];
-    id++;
+    guestId++;
     setGuests(newGuests);
     setFirstName('');
     setLastName('');
@@ -32,32 +32,56 @@ export default function NamesList() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        onChange={handleFirstNameChange}
-        value={firstName}
-        placeholder="Enter a first name"
-      />
-      <input
-        onChange={handleLastNameChange}
-        value={lastName}
-        placeholder="Enter a last name"
-      />
-      <button>Add guest to list</button>
-      <br />
-      Names:
-      {guests.map((user) => {
-        return (
-          <div key={`user-${user.id}`}>
-            <p>{user.firstName}</p>
-            <p>{user.lastName}</p>
-            <p>
-              {' '}
-              <CheckboxControlledComponent />{' '}
-            </p>
-          </div>
-        );
-      })}
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="firstname"> First name </label>
+        <input
+          onChange={handleFirstNameChange}
+          value={firstName}
+          placeholder="Enter a first name"
+          id="firstname"
+        />
+        <label htmlFor="lastName"> Last name </label>
+        <input
+          onChange={handleLastNameChange}
+          value={lastName}
+          placeholder="Enter a last name"
+          id="lastname"
+        />
+        <button>Add guest to guest list</button>
+        <br />
+        <h2>Guest list</h2>
+        <br />
+        {guests.map((guest) => {
+          return (
+            <div key={`guest-${guest.guestId}`}>
+              <p>{guest.firstName}</p>
+              <p>{guest.lastName}</p>
+              <p>
+                {' '}
+                <CheckboxControlledComponent />
+                {console.log(guest)}
+                {console.log(guests)}
+              </p>
+              <button
+                onClick={(event) => {
+                  const deleteGuest = [...guests];
+
+                  if (deleteGuest.length < 2) {
+                    deleteGuest.shift();
+                  } else if (guestId > deleteGuest.length) {
+                    deleteGuest.pop();
+                  } else {
+                    setGuests(deleteGuest.splice(guestId, 1));
+                  }
+                }}
+              >
+                Remove {`${guest.firstName} ${guest.lastName}`}
+              </button>
+            </div>
+          );
+        })}
+      </form>
+    </>
   );
 }

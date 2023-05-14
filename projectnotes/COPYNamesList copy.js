@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CheckboxControlledComponent from '../CheckboxControlledComponent';
+import CheckboxControlledComponent from '../src/CheckboxControlledComponent';
 
 let id = 0;
 
