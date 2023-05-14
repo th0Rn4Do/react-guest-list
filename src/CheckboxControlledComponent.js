@@ -19,7 +19,6 @@ export default function CheckboxControlledComponent() {
           }}
           aria-label="attending"
         />
-        <button>Accept</button>
       </label>
     </form>
   );

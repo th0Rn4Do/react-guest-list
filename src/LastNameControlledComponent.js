@@ -28,6 +28,7 @@ export default function LastNameControlledComponent() {
           update label
         </button>
       )}
+      <button> Add guest to guest list </button>
     </form>
   );
 }
