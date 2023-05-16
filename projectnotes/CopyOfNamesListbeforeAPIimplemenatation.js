@@ -1,55 +1,11 @@
 import PropTypes from 'prop-types';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import CheckboxControlledComponent from './CheckboxControlledComponent';
 
 export default function NamesList() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [guests, setGuests] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const baseUrl = 'http://localhost:4000';
-
-  async function getGuest(guest) {
-    const response = await fetch(`${baseUrl}/guests`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ guest }),
-    });
-    const createdGuest = await response.json();
-    console.log(createdGuest);
-    setGuests([...guests, createdGuest]);
-
-    //  const allGuests = await response.json();
-
-    //   setGuests([...guests, allGuests.results[0]]);
-  }
-
-  useEffect(() => {
-    async function firstRenderFetch() {
-      const response = await fetch(`${baseUrl}/guests/:id`);
-
-      const guest = await response.json();
-
-      setGuests([guest.id[0]]);
-    }
-
-    firstRenderFetch().catch((error) => {
-      console.log(error);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (guests.length > 0) {
-      setIsLoading(false);
-    }
-  }, [guests]); // trigger every time users is updated
-
-  if (isLoading) {
-    return 'Loading ...';
-  }
 
   function handleFirstNameChange(event) {
     setFirstName(event.target.value);
@@ -58,8 +14,7 @@ export default function NamesList() {
     setLastName(event.target.value);
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  function handleSubmit(event) {
     const newGuests = [
       ...guests,
       {
@@ -68,7 +23,6 @@ export default function NamesList() {
       },
     ];
     setGuests(newGuests);
-    await getGuest(guests);
     setFirstName('');
     setLastName('');
     event.preventDefault();
@@ -118,7 +72,6 @@ export default function NamesList() {
           </div>
         );
       })}
-      <button onClick={async () => await getGuest()}>get User</button>
     </div>
   );
 }
