@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CheckboxControlledComponent from './CheckboxControlledComponent';
+
+let guestId = 0;
 
 export default function NamesList() {
   const [firstName, setFirstName] = useState('');
@@ -16,24 +18,22 @@ export default function NamesList() {
 
   function handleSubmit(event) {
     const newGuests = [
-      ...guests,
       {
+        id: guestId,
         firstName: firstName,
         lastName: lastName,
       },
+      ...guests,
     ];
+    guestId++;
     setGuests(newGuests);
     setFirstName('');
     setLastName('');
     event.preventDefault();
   }
 
-  const deleteGuest = (indexOfGuest) => {
-    setGuests(guests.filter((val, i) => i !== indexOfGuest));
-  };
-
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit}>
         <label htmlFor="firstname"> First name </label>
         <input
@@ -50,28 +50,39 @@ export default function NamesList() {
           id="lastname"
         />
         <button>Add guest to guest list</button>
-      </form>
-      <br />
-      <h2>Guest list</h2>
-      <br />
+        <br />
+        <h2>Guest list</h2>
+        <br />
+        {guests.map((guest) => {
+          return (
+            <div key={`guest-${guest.guestId}`}>
+              <p>{guest.firstName}</p>
+              <p>{guest.lastName}</p>
+              <p>
+                {' '}
+                <CheckboxControlledComponent />
+                {console.log(guest)}
+                {console.log(guests)}
+              </p>
+              <button
+                onClick={(event) => {
+                  const deleteGuest = [...guests];
 
-      {guests.map((guest, index) => {
-        return (
-          <div key={`guest-${guest.index}`}>
-            <p>{guest.firstName}</p>
-            <p>{guest.lastName}</p>
-            <p>
-              {' '}
-              <CheckboxControlledComponent />
-              {console.log(guest)}
-              {console.log(guests)}
-            </p>
-            <button onClick={() => deleteGuest(index)}>
-              Remove {`${guest.firstName} ${guest.lastName}`}
-            </button>
-          </div>
-        );
-      })}
-    </div>
+                  if (deleteGuest.length < 2) {
+                    deleteGuest.shift();
+                  } else if (guestId > deleteGuest.length) {
+                    deleteGuest.pop();
+                  } else {
+                    setGuests(deleteGuest.splice(guestId, 1));
+                  }
+                }}
+              >
+                Remove {`${guest.firstName} ${guest.lastName}`}
+              </button>
+            </div>
+          );
+        })}
+      </form>
+    </>
   );
 }
