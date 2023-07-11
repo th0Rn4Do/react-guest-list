@@ -8,7 +8,7 @@ export default function NamesList() {
   const [guests, setGuests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const baseUrl = 'http://localhost:4000';
+  const baseUrl = 'http://localhost:4000/guests';
 
   async function getGuest(guest) {
     const response = await fetch(`${baseUrl}/guests`, {
